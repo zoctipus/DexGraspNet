@@ -65,11 +65,13 @@ class HandModel:
                 for visual in body.link.visuals:
                     scale = torch.tensor([1, 1, 1], dtype=torch.float, device=device)
                     if visual.geom_type == "box":
-                        # link_mesh = trimesh.primitives.Box(extents=2 * visual.geom_param)
-                        link_mesh = tm.load_mesh(os.path.join(mesh_path, 'box.obj'), process=False)
-                        link_mesh.vertices *= visual.geom_param.detach().cpu().numpy()
+                        link_mesh = tm.primitives.Box(extents=2 * visual.geom_param)
+                        # link_mesh = tm.load_mesh(os.path.join(mesh_path, 'box.obj'), process=False)
+                        # link_mesh.vertices *= visual.geom_param.detach().cpu().numpy()
                     elif visual.geom_type == "capsule":
                         link_mesh = tm.primitives.Capsule(radius=visual.geom_param[0], height=visual.geom_param[1] * 2).apply_translation((0, 0, -visual.geom_param[1]))
+                    elif visual.geom_type == "cylinder":
+                        link_mesh = tm.primitives.Cylinder(radius=visual.geom_param[0], height=visual.geom_param[1] * 2)
                     elif visual.geom_type == "mesh":
                         link_mesh = tm.load_mesh(os.path.join(mesh_path, visual.geom_param[0].split(":")[1]+".obj"), process=False)
                         if visual.geom_param[1] is not None:
@@ -124,6 +126,8 @@ class HandModel:
         total_area = sum(areas.values())
         num_samples = dict([(link_name, int(areas[link_name] / total_area * n_surface_points)) for link_name in self.mesh])
         num_samples[list(num_samples.keys())[0]] += n_surface_points - sum(num_samples.values())
+        
+        # contact_bound = json.load(open("mjcf/franka_emika_panda/contact_bounds.json", 'r'))
         for link_name in self.mesh:
             if num_samples[link_name] == 0:
                 self.mesh[link_name]['surface_points'] = torch.tensor([], dtype=torch.float, device=device).reshape(0, 3)
@@ -134,6 +138,25 @@ class HandModel:
             surface_points.to(dtype=float, device=device)
             self.mesh[link_name]['surface_points'] = surface_points
 
+            '''
+            Begin Octi Edit
+            '''
+        #     link_contact_bound = torch.tensor(contact_bound[link_name], device=device)
+        #     if len(link_contact_bound[0]) == 6:
+        #         bounds_mins, bounds_maxs = calculate_bounds(link_contact_bound)
+        #         point_in_any_bound_index = check_points_within_bounds(bounds_mins, bounds_maxs, surface_points)
+        #         self.mesh[link_name]['contact_candidates'] = surface_points[point_in_any_bound_index]
+            
+        # contact_points_to_dump = {}
+        # for link_name in self.mesh:
+        #     contact_points_to_dump[link_name] = []
+        #     contact_points_to_dump[link_name].extend(self.mesh[link_name]['contact_candidates'].tolist())
+        # file_path = 'mjcf/franka_emika_panda/contact_points.json'
+        # with open(file_path, 'w') as json_file:
+        #     json.dump(contact_points_to_dump, json_file, indent=4)
+        '''
+        End Octi Edit
+        '''
         # indexing
 
         self.link_name_to_link_index = dict(zip([link_name for link_name in self.mesh], range(len(self.mesh))))
@@ -214,7 +237,7 @@ class HandModel:
         dis = []
         x = (x - self.global_translation.unsqueeze(1)) @ self.global_rotation
         for link_name in self.mesh:
-            if link_name in ['robot0:forearm', 'robot0:wrist_child', 'robot0:ffknuckle_child', 'robot0:mfknuckle_child', 'robot0:rfknuckle_child', 'robot0:lfknuckle_child', 'robot0:thbase_child', 'robot0:thhub_child']:
+            if link_name in ['hand']:
                 continue
             matrix = self.current_status[link_name].get_matrix()
             x_local = (x - matrix[:, :3, 3].unsqueeze(1)) @ matrix[:, :3, :3]
@@ -362,3 +385,24 @@ class HandModel:
                 contact_points = contact_points @ pose[:3, :3].T + pose[:3, 3]
             data.append(go.Scatter3d(x=contact_points[:, 0], y=contact_points[:, 1], z=contact_points[:, 2], mode='markers', marker=dict(color='red', size=5)))
         return data
+
+def calculate_bounds(cubes_array):
+    # Calculate half extents
+    half_extents = cubes_array[:, 3:] / 2
+    
+    # Calculate min and max values for x, y, z
+    mins = cubes_array[:, :3] - half_extents
+    maxs = cubes_array[:, :3] + half_extents
+    
+    return mins, maxs
+
+def check_points_within_bounds(bounds_mins, bounds_maxs, points):
+    # Check if points are within the bounds for any cube
+    min_conditions = points[:, None, :] >= bounds_mins
+    max_conditions = points[:, None, :] <= bounds_maxs
+    
+    within_bounds = torch.logical_and(min_conditions, max_conditions)
+    # Check if any point is within any bounds along the cube axis (axis=2) and then any cube (axis=1)
+    point_in_any_bound_index = torch.any(torch.all(within_bounds, axis=2), axis=1)
+    
+    return point_in_any_bound_index

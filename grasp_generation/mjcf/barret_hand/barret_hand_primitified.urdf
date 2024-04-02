@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<robot name="barret_hand_primitified">
+  <joint name="barret_hand_primitified_World_root_joint" type="fixed">
+    <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="barret_hand_primitified_World"/>
+    <child link="bh282_hand_base"/>
+  </joint>
+  <joint name="barret_hand_primitified_root_joint" type="fixed">
+    <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="World"/>
+    <child link="barret_hand_primitified_World"/>
+  </joint>
+  <joint name="bh282_j00" type="revolute">
+    <origin xyz="-0.025 0. 0.0754" rpy="1.5707964 1.5707964 0. "/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_finger0_0"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="3.1415927" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j01" type="revolute">
+    <origin xyz="0.028 0.001 0.05 " rpy="-3.1415925 0. -1.5707966"/>
+    <parent link="bh282_finger0_0"/>
+    <child link="bh282_finger0_1"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="2.4434607" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j02" type="revolute">
+    <origin xyz="0.0002 0.003 -0.0699357" rpy="0.6981317 0. 0. "/>
+    <parent link="bh282_finger0_1"/>
+    <child link="bh282_finger0_2"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="0.837758" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j10" type="revolute">
+    <origin xyz="0.025 0. 0.0754" rpy="-1.5708 -1.5707963 0. "/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_finger1_0"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="3.1415927" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j11" type="revolute">
+    <origin xyz="-0.0277073 0.001 -0.0501628" rpy="0.0058448 0. -1.570796 "/>
+    <parent link="bh282_finger1_0"/>
+    <child link="bh282_finger1_1"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="2.4434607" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j12" type="revolute">
+    <origin xyz="0.0002 0.003 -0.0699357" rpy="0.70008 0. 0. "/>
+    <parent link="bh282_finger1_1"/>
+    <child link="bh282_finger1_2"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="0.837758" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j21" type="revolute">
+    <origin xyz="-0.0018 0.053 0.048 " rpy="1.5707963 -0.0000003 -0.0000003"/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_finger2_1"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="2.4434607" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_j22" type="revolute">
+    <origin xyz="0.0002 0.003 -0.0699357" rpy="0.6981317 0. 0. "/>
+    <parent link="bh282_finger2_1"/>
+    <child link="bh282_finger2_2"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="0.837758" effort="340282346638528859811704183484516925440." velocity="2."/>
+  </joint>
+  <joint name="bh282_perception_palm_mount" type="fixed">
+    <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_perception_palm"/>
+  </joint>
+  <link name="World"/>
+  <link name="barret_hand_primitified_World">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.000001"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+  </link>
+  <link name="bh282_finger0_0">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.14109"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0374328 0. 0.0293218" rpy="0. -1.5707963 0. "/>
+      <geometry>
+        <box size="0.0701436 0.018148 0.044282 "/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0374328 0. 0.0293218" rpy="0. -1.5707963 0. "/>
+      <geometry>
+        <box size="0.0701436 0.018148 0.044282 "/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger0_1">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.062139"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0007798 0.0037583 -0.0360479" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0208819 0.0165144"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.0007798 0.0037583 -0.0360479" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0208819 0.0165144"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger0_2">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.04166"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0007798 0.0009553 -0.0247046" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0193735 0.0212805"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.0007798 0.0009553 -0.0247046" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0193735 0.0212805"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger1_0">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.14109"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0372607 0. -0.0295401" rpy="0. 1.5649515 0. "/>
+      <geometry>
+        <box size="0.0701436 0.018148 0.044282 "/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="bh282_finger1_1">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.062139"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0007798 0.0037583 -0.0360479" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0208819 0.0165144"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="bh282_finger1_2">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.04166"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0007798 0.0009553 -0.0247046" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0193735 0.0212805"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="bh282_finger2_1">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.062139"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0007798 0.0037583 -0.0360479" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0208819 0.0165144"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="bh282_finger2_2">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.04166"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0007798 0.0009553 -0.0247046" rpy="1.5707935 1.481077 1.5707933"/>
+      <geometry>
+        <box size="0.0581951 0.0193735 0.0212805"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="bh282_hand_base">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.60858"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0.0199037" rpy="0. 0. 0."/>
+      <geometry>
+        <cylinder radius="0.045" length="0.06"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0.0489742 0.0377972" rpy="0. 0. 0."/>
+      <geometry>
+        <box size="0.024156 0.0335379 0.044282 "/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0.0199037" rpy="0. 0. 0."/>
+      <geometry>
+        <cylinder radius="0.045" length="0.06"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0.0489742 0.0377972" rpy="0. 0. 0."/>
+      <geometry>
+        <box size="0.024156 0.0335379 0.044282 "/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_perception_palm">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.60858"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+  </link>
+</robot>

@@ -1,0 +1,62 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "generate grasp",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/generate_grasps.py",
+            "console": "integratedTerminal",
+            "args": ["--all"],
+            "env": {
+                "CUDA_VISIBLE_DEVICES" : "0"
+            }
+        },
+        {
+            "name": "visualize hand",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/visualize_hand_model.py",
+            "console": "integratedTerminal",
+            "args": [],
+        },
+        {
+            "name": "visualize hand urdf",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/visualize_hand_model_urdf.py",
+            "console": "integratedTerminal",
+            "args": [],
+        },
+        {
+            "name": "visualize result",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/visualize_result.py",
+            "console": "integratedTerminal",
+            "args": [],
+        },
+        {
+            "name": "visualize franka hand",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/visualize_franka_model.py",
+            "console": "integratedTerminal",
+            "args": [],
+        },
+        {
+            "name": "validate hand",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/validate_grasps.py",
+            "console": "integratedTerminal",
+            "args": [],
+            "env": {
+                "CUDA_VISIBLE_DEVICES" : "0"
+            }
+        }
+    ]
+}

@@ -18,7 +18,8 @@ import math
 import random
 import transforms3d
 
-from utils.hand_model import HandModel
+# from utils.hand_model import HandModel
+from utils.hand_model_urdf import HandModel
 from utils.object_model import ObjectModel
 from utils.initializations import initialize_convex_hull
 from utils.energy import cal_energy
@@ -51,13 +52,33 @@ def generate(args_list):
     os.environ['CUDA_VISIBLE_DEVICES'] = gpu_list[worker - 1]
     device = torch.device('cuda')
 
+    # save results
+    translation_names = ['WRJTx', 'WRJTy', 'WRJTz']
+    rot_names = ['WRJRx', 'WRJRy', 'WRJRz']
+    
+
     hand_model = HandModel(
-        mjcf_path='mjcf/shadow_hand_wrist_free.xml',
-        mesh_path='mjcf/meshes',
-        contact_points_path='mjcf/contact_points.json',
-        penetration_points_path='mjcf/penetration_points.json',
+        urdf_path='mjcf/franka_hand/franka.urdf',
+        contact_points_path='mjcf/franka_hand/contact_points.json', 
+        n_surface_points=1000, 
         device=device
     )
+
+    joint_names = [
+        'left_finger', 'right_finger', 
+    ]
+
+    '''Barret Hand'''
+    # hand_model = HandModel(
+    #     urdf_path='mjcf/barret_hand/barret_hand_collisions_primitified.urdf',
+    #     contact_points_path='mjcf/barret_hand/contact_points.json', 
+    #     n_surface_points=1000, 
+    #     device=device
+    # )
+
+    # joint_names = [
+    #     'bh282_j00', 'bh282_j01', 'bh282_j02', 'bh282_j10', 'bh282_j11', 'bh282_j12', "bh282_j21", "bh282_j22", 
+    # ]
 
     object_model = ObjectModel(
         data_root_path=args.data_root_path,
@@ -113,17 +134,6 @@ def generate(args_list):
             E_spen[accept] = new_E_spen[accept]
             E_joints[accept] = new_E_joints[accept]
 
-
-    # save results
-    translation_names = ['WRJTx', 'WRJTy', 'WRJTz']
-    rot_names = ['WRJRx', 'WRJRy', 'WRJRz']
-    joint_names = [
-        'robot0:FFJ3', 'robot0:FFJ2', 'robot0:FFJ1', 'robot0:FFJ0',
-        'robot0:MFJ3', 'robot0:MFJ2', 'robot0:MFJ1', 'robot0:MFJ0',
-        'robot0:RFJ3', 'robot0:RFJ2', 'robot0:RFJ1', 'robot0:RFJ0',
-        'robot0:LFJ4', 'robot0:LFJ3', 'robot0:LFJ2', 'robot0:LFJ1', 'robot0:LFJ0',
-        'robot0:THJ4', 'robot0:THJ3', 'robot0:THJ2', 'robot0:THJ1', 'robot0:THJ0'
-    ]
     for i, object_code in enumerate(object_code_list):
         data_list = []
         for j in range(args.batch_size_each):
@@ -158,7 +168,7 @@ def generate(args_list):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # experiment settings
-    parser.add_argument('--result_path', default="../data/graspdata", type=str)
+    parser.add_argument('--result_path', default="../data/graspdata_franka", type=str)
     parser.add_argument('--data_root_path', default="../data/meshdata", type=str)
     parser.add_argument('--object_code_list', nargs='*', type=str)
     parser.add_argument('--all', action='store_true')
@@ -168,7 +178,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_contact', default=4, type=int)
     parser.add_argument('--batch_size_each', default=500, type=int)
     parser.add_argument('--max_total_batch_size', default=1000, type=int)
-    parser.add_argument('--n_iter', default=6000, type=int)
+    parser.add_argument('--n_iter', default=3000, type=int)
     # hyper parameters
     parser.add_argument('--switch_possibility', default=0.5, type=float)
     parser.add_argument('--mu', default=0.98, type=float)
@@ -180,7 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('--w_dis', default=100.0, type=float)
     parser.add_argument('--w_pen', default=100.0, type=float)
     parser.add_argument('--w_spen', default=10.0, type=float)
-    parser.add_argument('--w_joints', default=1.0, type=float)
+    parser.add_argument('--w_joints', default=100.0, type=float)
     # initialization settings
     parser.add_argument('--jitter_strength', default=0.1, type=float)
     parser.add_argument('--distance_lower', default=0.2, type=float)

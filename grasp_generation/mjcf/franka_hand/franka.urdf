@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot name="franka">
+  <joint name="finger_joint1" type="prismatic">
+    <origin xyz="0. 0. 0.0584" rpy="0. 0. 1.5707964"/>
+    <parent link="hand"/>
+    <child link="left_finger"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="0.04" effort="0." velocity="1000000."/>
+  </joint>
+  <joint name="finger_joint2" type="prismatic">
+    <origin xyz="0. 0. 0.0584" rpy="0. 0. -1.5707964"/>
+    <parent link="hand"/>
+    <child link="right_finger"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="0." upper="0.04" effort="0." velocity="1000000."/>
+  </joint>
+  <link name="hand">
+    <visual>
+      <origin xyz="0. 0. 0.02615" rpy="0. 0. 0."/>
+      <geometry>
+        <box size="0.05784 0.20168 0.08004"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0.02615" rpy="0. 0. 0."/>
+      <geometry>
+        <box size="0.05784 0.20168 0.08004"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_finger">
+    <visual>
+      <origin xyz="0.01664 0. 0.02144" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.02012 0.01646 0.02954"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0.00706 0. 0.04438" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.01712 0.01444 0.01718"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.01664 0. 0.02144" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.02012 0.01646 0.02954"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0.00706 0. 0.04438" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.01712 0.01444 0.01718"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_finger">
+    <visual>
+      <origin xyz="0.01664 0. 0.02144" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.02012 0.01646 0.02954"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0.00706 0. 0.04438" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.01712 0.01444 0.01718"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.01664 0. 0.02144" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.02012 0.01646 0.02954"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0.00706 0. 0.04438" rpy="0. 0. -1.5707964"/>
+      <geometry>
+        <box size="0.01712 0.01444 0.01718"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

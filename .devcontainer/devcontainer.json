@@ -1,0 +1,27 @@
+{
+    "name": "DexGraspNet",
+    "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        "--gpus", "all",
+        "--network", "host",
+        "--env", "ACCEPT_EULA=Y",
+        "--env", "DISPLAY",
+        "--volume", "/tmp/.X11-unix:/tmp/.X11-unix",
+        "--privileged",
+        "--interactive",
+        "--tty"
+      ],
+    "customizations": {
+        "extensions": ["ms-python.python"]
+    },
+    "mounts": [
+        "source=/home/octipus/Projects/dex/DexGraspNet,target=/app,type=bind"
+      ],
+    // "postCreateCommand": "nvidia-smi && lspci | grep ' VGA ' && vulkaninfo --summary",
+    "forwardPorts": [3000],
+    "remoteUser": "root", // or the specific user you have in the container
+    "initializeCommand": "ls"
+}

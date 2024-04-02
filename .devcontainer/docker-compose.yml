@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  gpu-service:
+    image: your-gpu-enabled-docker-image
+    command: your-service-command
+    environment:
+      - ENV_VAR_NAME=value
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities: [gpu, utility, compute, video]

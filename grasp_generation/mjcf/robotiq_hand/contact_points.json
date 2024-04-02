@@ -1,0 +1,14 @@
+{
+    "base_mount": [],
+    "base": [],
+    "right_driver_child": [],
+    "right_coupler_child": [],
+    "right_spring_link_child": [],
+    "right_follower_child": [],
+    "right_pad": [],
+    "left_driver_child": [],
+    "left_coupler_child": [],
+    "left_spring_link_child": [],
+    "left_follower_child": [],
+    "left_pad": []
+}

@@ -16,7 +16,7 @@ import trimesh as tm
 import transforms3d
 import plotly.graph_objects as go
 from utils.hand_model import HandModel
-
+# from utils.hand_model_urdf import HandModel
 
 torch.manual_seed(1)
 
@@ -27,17 +27,38 @@ if __name__ == '__main__':
 
     # hand model
 
+    # hand_model = HandModel(
+    #     mjcf_path='mjcf/shadow_hand/shadow_hand_wrist_free.xml',
+    #     mesh_path='mjcf/shadow_hand/meshes',
+    #     contact_points_path="mjcf/shadow_hand/contact_points.json",
+    #     penetration_points_path="mjcf/shadow_hand/penetration_points.json",
+    #     n_surface_points=2000,
+    #     device=device
+    # )
+
+    # hand_model = HandModel(
+    #     mjcf_path='mjcf/franka_hand/hand.xml',
+    #     mesh_path='mjcf/franka_hand/meshes',
+    #     contact_points_path='mjcf/franka_hand/contact_points.json',
+    #     penetration_points_path='mjcf/franka_hand/penetration_points.json',
+    #     n_surface_points=2000,
+    #     device=device
+    # )
+
     hand_model = HandModel(
-        mjcf_path='mjcf/shadow_hand_wrist_free.xml',
-        mesh_path='mjcf/meshes',
-        contact_points_path='mjcf/contact_points.json',
-        penetration_points_path='mjcf/penetration_points.json',
+        mjcf_path='mjcf/robotiq_hand/2f85_primitified.xml',
+        mesh_path='mjcf/robotiq_hand/meshes',
+        contact_points_path='mjcf/robotiq_hand/contact_points.json',
+        penetration_points_path='mjcf/robotiq_hand/penetration_points.json',
         n_surface_points=2000,
         device=device
     )
-    joint_angles = torch.tensor([0.1, 0, 0.6, 0, 0, 0, 0.6, 0, -0.1, 0, 0.6, 0, 0, -0.2, 0, 0.6, 0, 0, 1.2, 0, -0.2, 0], dtype=torch.float, device=device)
 
-    rotation = torch.tensor(transforms3d.euler.euler2mat(0, -np.pi / 3, 0, axes='rzxz'), dtype=torch.float, device=device)
+
+    # joint_angles = torch.tensor([0.1, 0, 0.6, 0, 0, 0, 0.6, 0, -0.1, 0, 0.6, 0, 0, -0.2, 0, 0.6, 0, 0, 1.2, 0, -0.2, 0], dtype=torch.float, device=device)
+    # joint_angles = torch.tensor([0.04, 0.04], dtype=torch.float, device=device)
+    joint_angles = torch.tensor([0, 0, 0, 0, 0, 0, 0, 0], dtype=torch.float, device=device)
+    rotation = torch.tensor(transforms3d.euler.euler2mat(0, 0, 0, axes='rzxz'), dtype=torch.float, device=device)
     hand_pose = torch.cat([torch.tensor([0, 0, 0], dtype=torch.float, device=device), rotation.T.ravel()[:6], joint_angles])
     hand_model.set_parameters(hand_pose.unsqueeze(0))
 

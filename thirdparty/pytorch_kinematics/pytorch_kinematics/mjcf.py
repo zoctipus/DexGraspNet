@@ -2,8 +2,8 @@ from . import frame
 from . import chain
 from . import mjcf_parser
 import pytorch_kinematics.transforms as tf
-
-JOINT_TYPE_MAP = {'hinge': 'revolute', None: 'revolute'}
+import collections.abc  # For checking if an object is iterable
+JOINT_TYPE_MAP = {'hinge': 'revolute', None: 'revolute', 'slide': 'prismatic'}
 
 
 def geoms_to_visuals(geom, base=tf.Transform3d()):
@@ -15,11 +15,20 @@ def geoms_to_visuals(geom, base=tf.Transform3d()):
             param = g.size[0]
         elif g.type == 'box':
             param = g.size
+        elif g.type == 'cylinder':
+            param = g.size
         elif g.type == 'mesh':
             param = (g.mesh.name, g.mesh.scale)
         else:
-            # print(g.name)
-            param = (g.mesh.name, g.mesh.scale)
+            if g.mesh is not None:
+                # print(g.name)
+                param = (g.mesh.name, g.mesh.scale)
+            elif g.dclass is not None:
+                if not isinstance(g.dclass.geom, collections.abc.Iterable):
+                    visuals.extend(geoms_to_visuals([g.dclass.geom]))
+                else:
+                    visuals.extend(geoms_to_visuals(g.dclass.geom))
+            
             # raise ValueError('Invalid geometry type %s.' % g.type)
         visuals.append(frame.Visual(offset=base.compose(tf.Transform3d(rot=g.quat, pos=g.pos)),
                                     geom_type=g.type,
