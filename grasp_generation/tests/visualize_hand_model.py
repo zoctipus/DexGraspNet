@@ -36,23 +36,23 @@ if __name__ == '__main__':
     #     device=device
     # )
 
-    # hand_model = HandModel(
-    #     mjcf_path='mjcf/franka_hand/hand.xml',
-    #     mesh_path='mjcf/franka_hand/meshes',
-    #     contact_points_path='mjcf/franka_hand/contact_points.json',
-    #     penetration_points_path='mjcf/franka_hand/penetration_points.json',
-    #     n_surface_points=2000,
-    #     device=device
-    # )
-
     hand_model = HandModel(
-        mjcf_path='mjcf/robotiq_hand/2f85_primitified.xml',
-        mesh_path='mjcf/robotiq_hand/meshes',
-        contact_points_path='mjcf/robotiq_hand/contact_points.json',
-        penetration_points_path='mjcf/robotiq_hand/penetration_points.json',
+        mjcf_path='mjcf/franka_hand/hand.xml',
+        mesh_path='mjcf/franka_hand/meshes',
+        contact_points_path='mjcf/franka_hand/contact_points.json',
+        penetration_points_path='mjcf/franka_hand/penetration_points.json',
         n_surface_points=2000,
         device=device
     )
+
+    # hand_model = HandModel(
+    #     mjcf_path='mjcf/robotiq_hand/2f85_primitified.xml',
+    #     mesh_path='mjcf/robotiq_hand/meshes',
+    #     contact_points_path='mjcf/robotiq_hand/contact_points.json',
+    #     penetration_points_path='mjcf/robotiq_hand/penetration_points.json',
+    #     n_surface_points=2000,
+    #     device=device
+    # )
 
 
     # joint_angles = torch.tensor([0.1, 0, 0.6, 0, 0, 0, 0.6, 0, -0.1, 0, 0.6, 0, 0, -0.2, 0, 0.6, 0, 0, 1.2, 0, -0.2, 0], dtype=torch.float, device=device)

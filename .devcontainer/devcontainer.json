@@ -14,14 +14,9 @@
         "--interactive",
         "--tty"
       ],
-    "customizations": {
-        "extensions": ["ms-python.python"]
-    },
     "mounts": [
-        "source=/home/octipus/Projects/dex/DexGraspNet,target=/app,type=bind"
+        "source=/home/octipus/Projects/DexGraspNet,target=/app,type=bind"
       ],
-    // "postCreateCommand": "nvidia-smi && lspci | grep ' VGA ' && vulkaninfo --summary",
     "forwardPorts": [3000],
-    "remoteUser": "root", // or the specific user you have in the container
-    "initializeCommand": "ls"
+    "remoteUser": "root" // or the specific user you have in the container
 }

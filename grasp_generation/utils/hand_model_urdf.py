@@ -23,11 +23,12 @@ from torchsdf import index_vertices_by_faces, compute_sdf
 
 
 class HandModel:
-    def __init__(self, urdf_path, contact_points_path, n_surface_points=0, device='cpu'):
+    def __init__(self, urdf_path, contact_points_path, default_pos, n_surface_points=0, device='cpu'):
         self.device = device
         self.chain = pk.build_chain_from_urdf(open(urdf_path).read()).to(dtype=torch.float, device=device)
         self.robot = Robot.from_xml_file(urdf_path)
         self.n_dofs = len(self.chain.get_joint_parameter_names())
+        self.default_pos = default_pos
         
         contact_points = json.load(open(contact_points_path, 'r'))
 

@@ -25,7 +25,7 @@ from utils.initializations import initialize_convex_hull
 from utils.energy import cal_energy
 from utils.optimizer import Annealing
 from utils.rot6d import robust_compute_rotation_matrix_from_ortho6d
-
+from hands.hand_configs import *
 from torch.multiprocessing import set_start_method
 
 try:
@@ -39,7 +39,7 @@ np.seterr(all='raise')
 
 
 def generate(args_list):
-    args, object_code_list, id, gpu_list = args_list
+    args, object_code_list, id, gpu_list, result_path = args_list
 
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -56,29 +56,24 @@ def generate(args_list):
     translation_names = ['WRJTx', 'WRJTy', 'WRJTz']
     rot_names = ['WRJRx', 'WRJRy', 'WRJRz']
     
+    if args.hand not in ["allegro_cfg", "barrett_cfg", "franka_cfg"]:
+        raise ValueError("the argument for hand is not found in hands assets")
+    if args.hand == "allegro_cfg":
+        hand = allegro_cfg
+    elif args.hand == "barrett_cfg":
+        hand = barrett_cfg
+    elif args.hand == "franka_cfg":
+        hand = franka_cfg
 
     hand_model = HandModel(
-        urdf_path='mjcf/franka_hand/franka.urdf',
-        contact_points_path='mjcf/franka_hand/contact_points.json', 
+        urdf_path=hand["urdf_path"],
+        contact_points_path=hand["contact_points_path"],
+        default_pos=hand["default_pos"],
         n_surface_points=1000, 
-        device=device
+        device=device,
     )
 
-    joint_names = [
-        'left_finger', 'right_finger', 
-    ]
-
-    '''Barret Hand'''
-    # hand_model = HandModel(
-    #     urdf_path='mjcf/barret_hand/barret_hand_collisions_primitified.urdf',
-    #     contact_points_path='mjcf/barret_hand/contact_points.json', 
-    #     n_surface_points=1000, 
-    #     device=device
-    # )
-
-    # joint_names = [
-    #     'bh282_j00', 'bh282_j01', 'bh282_j02', 'bh282_j10', 'bh282_j11', 'bh282_j12', "bh282_j21", "bh282_j22", 
-    # ]
+    joint_names = hand["joint_names"]
 
     object_model = ObjectModel(
         data_root_path=args.data_root_path,
@@ -162,12 +157,13 @@ def generate(args_list):
                 E_spen=E_spen[idx].item(),
                 E_joints=E_joints[idx].item(),
             ))
-        np.save(os.path.join(args.result_path, object_code + '.npy'), data_list, allow_pickle=True)
+        np.save(os.path.join(result_path, object_code + '.npy'), data_list, allow_pickle=True)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # experiment settings
+    parser.add_argument('--hand', type=str, default='allegro_cfg')
     parser.add_argument('--result_path', default="../data/graspdata_franka", type=str)
     parser.add_argument('--data_root_path', default="../data/meshdata", type=str)
     parser.add_argument('--object_code_list', nargs='*', type=str)
@@ -178,7 +174,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_contact', default=4, type=int)
     parser.add_argument('--batch_size_each', default=500, type=int)
     parser.add_argument('--max_total_batch_size', default=1000, type=int)
-    parser.add_argument('--n_iter', default=3000, type=int)
+    parser.add_argument('--n_iter', default=500, type=int)
     # hyper parameters
     parser.add_argument('--switch_possibility', default=0.5, type=float)
     parser.add_argument('--mu', default=0.98, type=float)
@@ -212,9 +208,12 @@ if __name__ == '__main__':
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
-
-    if not os.path.exists(args.result_path):
-        os.makedirs(args.result_path)
+    hand_name = args.hand[:args.hand.rfind('_')]
+    result_path = os.path.join("../data", hand_name + "_graspdata") 
+    # if not os.path.exists(args.result_path):
+    #     os.makedirs(args.result_path)
+    if not os.path.exists(result_path):
+        os.makedirs(result_path)
     
     if not os.path.exists(args.data_root_path):
         raise ValueError(f'data_root_path {args.data_root_path} doesn\'t exist')
@@ -238,7 +237,7 @@ if __name__ == '__main__':
     
     if not args.overwrite:
         for object_code in object_code_list.copy():
-            if os.path.exists(os.path.join(args.result_path, object_code + '.npy')):
+            if os.path.exists(os.path.join(result_path, object_code + '.npy')):
                 object_code_list.remove(object_code)
 
     if args.batch_size_each > args.max_total_batch_size:
@@ -255,7 +254,7 @@ if __name__ == '__main__':
 
     process_args = []
     for id, object_code_group in enumerate(object_code_groups):
-        process_args.append((args, object_code_group, id + 1, gpu_list))
+        process_args.append((args, object_code_group, id + 1, gpu_list, result_path))
 
     with multiprocessing.Pool(len(gpu_list)) as p:
         it = tqdm(p.imap(generate, process_args), total=len(process_args), desc='generating', maxinterval=1000)

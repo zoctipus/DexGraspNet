@@ -12,10 +12,12 @@ sys.path.append(os.path.realpath('.'))
 
 import numpy as np
 import torch
+import argparse
 import trimesh as tm
 import transforms3d
 import plotly.graph_objects as go
 from utils.hand_model_urdf import HandModel
+from hands.hand_configs import *
 
 
 torch.manual_seed(1)
@@ -23,58 +25,39 @@ torch.manual_seed(1)
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--hand', type=str, default='barrett_cfg')
+    args = parser.parse_args()
     device = torch.device('cpu')
+    
+    if args.hand not in ["allegro_cfg", "barrett_cfg", "franka_cfg"]:
+        raise ValueError("the argument for hand is not found in hands assets")
+    if args.hand == "allegro_cfg":
+        hand = allegro_cfg
+    elif args.hand == "barrett_cfg":
+        hand = barrett_cfg
+    elif args.hand == "franka_cfg":
+        hand = franka_cfg
+    
     rot = transforms3d.euler.euler2mat(-np.pi / 2, -np.pi / 2, 0, axes='rzyz')
-    # hand model
-    '''Franka Hand'''
+    
     hand_model = HandModel(
-        urdf_path='mjcf/franka_hand/franka.urdf',
-        contact_points_path='mjcf/franka_hand/contact_points.json', 
+        urdf_path=hand["urdf_path"],
+        contact_points_path=hand["contact_points_path"],
+        default_pos=hand["default_pos"],
         n_surface_points=1000, 
         device=device
     )
-
+    
     hand_pose = torch.cat([
         torch.tensor([0, 0, 0], dtype=torch.float, device=device), 
         # torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float, device=device),
         torch.tensor(rot.T.ravel()[:6], dtype=torch.float, device=device),
         # torch.zeros([16], dtype=torch.float, device=device),
-        torch.tensor([
-            0.02, 0.02
-        ], dtype=torch.float, device=device), 
-    ], dim=0)
-
-    '''Barrett Hand'''
-    # hand_model = HandModel(
-    #     urdf_path='mjcf/barret_hand/barret_hand_collisions_primitified.urdf',
-    #     contact_points_path='mjcf/barret_hand/contact_points.json', 
-    #     n_surface_points=1000, 
-    #     device=device
-    # )
-
-    # hand_pose = torch.cat([
-    #     torch.tensor([0, 0, 0], dtype=torch.float, device=device), 
-    #     # torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float, device=device),
-    #     torch.tensor(rot.T.ravel()[:6], dtype=torch.float, device=device),
-    #     # torch.zeros([16], dtype=torch.float, device=device),
-    #     torch.tensor([
-    #         3.1416, 2.4435, 0.8378, 3.1416, 2.4435, 0.8378, 2.4435, 0.8378 
-    #     ], dtype=torch.float, device=device), 
-    # ], dim=0)
-
-    '''Allegro Hand'''
-    # hand_model = HandModel(
-    #     urdf_path='mjcf/allegro_hand/allegro_hand_description_left.urdf',
-    #     contact_points_path='mjcf/allegro_hand/contact_points.json', 
-    #     n_surface_points=1000, 
-    #     device=device
-    # )
-
+        torch.tensor(hand["default_pos"], dtype=torch.float, device=device), ], dim=0)
     
     
     hand_model.set_parameters(hand_pose.unsqueeze(0))
-
-
 
     # info
     contact_candidates = hand_model.get_contact_candidates()[0]

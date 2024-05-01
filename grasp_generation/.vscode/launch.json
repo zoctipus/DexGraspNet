@@ -29,7 +29,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/visualize_hand_model_urdf.py",
             "console": "integratedTerminal",
-            "args": [],
+            "args": ["--hand", "allegro_cfg"],
         },
         {
             "name": "visualize result",
@@ -37,7 +37,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/visualize_result.py",
             "console": "integratedTerminal",
-            "args": [],
+            "args": ["--hand", "allegro_cfg"],
         },
         {
             "name": "visualize franka hand",

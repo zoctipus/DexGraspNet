@@ -18,3 +18,5 @@ cd TorchSDF/
 git checkout 0.1.0
 bash install.sh
 cd ../
+
+pip install trimesh==3.10

@@ -83,7 +83,7 @@ def initialize_convex_hull(hand_model, object_model, args):
     # initialize joint angles
     # joint_angles_mu: hand-crafted canonicalized hand articulation
     # use truncated normal distribution to jitter the joint angles
-    joint_angles_mu = torch.tensor([0.04, 0.04], dtype=torch.float, device=device)
+    joint_angles_mu = torch.tensor(hand_model.default_pos, dtype=torch.float, device=device)
     # joint_angles_mu = torch.tensor([0.1, 0, 0.6, 0, 0, 0, 0.6, 0, -0.1, 0, 0.6, 0, 0, -0.2, 0, 0.6, 0, 0, 1.2, 0, -0.2, 0], dtype=torch.float, device=device)
     joint_angles_sigma = args.jitter_strength * (hand_model.joints_upper - hand_model.joints_lower)
     joint_angles = torch.zeros([total_batch_size, hand_model.n_dofs], dtype=torch.float, device=device)

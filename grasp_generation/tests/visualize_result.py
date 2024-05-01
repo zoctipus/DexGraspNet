@@ -19,7 +19,7 @@ import plotly.graph_objects as go
 # from utils.hand_model import HandModel
 from utils.hand_model_urdf import HandModel
 from utils.object_model import ObjectModel
-
+from hands.hand_configs import *
 translation_names = ['WRJTx', 'WRJTy', 'WRJTz']
 rot_names = ['WRJRx', 'WRJRy', 'WRJRz']
 
@@ -27,12 +27,32 @@ rot_names = ['WRJRx', 'WRJRy', 'WRJRz']
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--hand', type=str, default='allegro_cfg')
     parser.add_argument('--object_code', type=str, default='core-mug-8570d9a8d24cb0acbebd3c0c0c70fb03')
-    parser.add_argument('--num', type=int, default=12)
-    parser.add_argument('--result_path', type=str, default='../data/graspdata2')
+    parser.add_argument('--num', type=int, default=3)
     args = parser.parse_args()
-
+    hand_name = args.hand[:args.hand.rfind('_')]
+    result_path = os.path.join("../data", hand_name + "_graspdata") 
     device = 'cpu'
+    
+    if args.hand not in ["allegro_cfg", "barrett_cfg", "franka_cfg"]:
+        raise ValueError("the argument for hand is not found in hands assets")
+    if args.hand == "allegro_cfg":
+        hand = allegro_cfg
+    elif args.hand == "barrett_cfg":
+        hand = barrett_cfg
+    elif args.hand == "franka_cfg":
+        hand = franka_cfg
+        
+    hand_model = HandModel(
+        urdf_path=hand["urdf_path"],
+        contact_points_path=hand["contact_points_path"],
+        default_pos=hand["default_pos"], 
+        n_surface_points=1000, 
+        device=device
+    )
+    
+    joint_names = hand["joint_names"]
 
     # hand models
     '''Robotiq Hand'''
@@ -59,33 +79,10 @@ if __name__ == '__main__':
     #     'robot0:LFJ4', 'robot0:LFJ3', 'robot0:LFJ2', 'robot0:LFJ1', 'robot0:LFJ0',
     #     'robot0:THJ4', 'robot0:THJ3', 'robot0:THJ2', 'robot0:THJ1', 'robot0:THJ0'
     # ]
-    '''Franka Hand'''
-    # hand_model = HandModel(
-    #     urdf_path='mjcf/franka_hand/franka.urdf',
-    #     contact_points_path='mjcf/franka_hand/contact_points.json', 
-    #     n_surface_points=1000, 
-    #     device=device
-    # )
-
-    # joint_names = [
-    #     'left_finger', 'right_finger'
-    # ]
-    '''Barret Hand'''
-    hand_model = HandModel(
-        urdf_path='mjcf/barret_hand/barret_hand_collisions_primitified.urdf',
-        contact_points_path='mjcf/barret_hand/contact_points.json', 
-        n_surface_points=1000, 
-        device=device
-    )
-
-    joint_names = [
-        'bh282_j00', 'bh282_j01', 'bh282_j02', 'bh282_j10', 'bh282_j11', 'bh282_j12', "bh282_j21", "bh282_j22", 
-    ]
-
 
 
     # load results
-    data_dict = np.load(os.path.join(args.result_path, args.object_code + '.npy'), allow_pickle=True)[args.num]
+    data_dict = np.load(os.path.join(result_path, args.object_code + '.npy'), allow_pickle=True)[args.num]
     qpos = data_dict['qpos']
     rot = np.array(transforms3d.euler.euler2mat(*[qpos[name] for name in rot_names]))
     rot = rot[:, :2].T.ravel().tolist()
