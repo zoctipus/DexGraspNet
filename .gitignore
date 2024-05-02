@@ -9,5 +9,8 @@ data
 **/data/dataset/
 /data/
 
+/thirdparty/
+**/thirdparty
+
 # Caches
 __pycache__
