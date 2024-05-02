@@ -14,6 +14,7 @@ RUN apt-get update \
     pciutils \
     mesa-utils
 
+RUN apt-get update && apt-get install -y cmake
 # Install necessary system dependencies
 RUN apt-get update && apt-get install -y \
     git \

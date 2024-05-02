@@ -13,10 +13,16 @@ allegro_cfg={
     }
 
 barrett_cfg={
+    "name": "barrett",
     "urdf_path" : 'hands/barret_hand/barret_hand_collisions_primitified.urdf',
+    "src_urdf_path" : 'hands/barret_hand/barret_hand/barret_hand.urdf',
     "contact_points_path" : 'hands/barret_hand/contact_points.json',
+    # "default_pos" : [
+    #         3.1416, 2.4435, 0.8378, 3.1416, 2.4435, 0.8378, 2.4435, 0.8378 
+    #     ],
+    "close_pos" : [-1, -1, 2.4, 2.4, 2.4, 0.83, 0.83, 0.83 ],
     "default_pos" : [
-            3.1416, 2.4435, 0.8378, 3.1416, 2.4435, 0.8378, 2.4435, 0.8378 
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 
         ],
     "joint_names" : [
             'bh282_j00', 'bh282_j01', 'bh282_j02', 'bh282_j10', 'bh282_j11', 'bh282_j12', "bh282_j21", "bh282_j22", 

@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/scripts/generate_grasps.py",
             "console": "integratedTerminal",
-            "args": ["--all"],
+            "args": ["--all", "--hand","barrett_cfg"],
             "env": {
                 "CUDA_VISIBLE_DEVICES" : "0"
             }
@@ -29,7 +29,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/visualize_hand_model_urdf.py",
             "console": "integratedTerminal",
-            "args": ["--hand", "allegro_cfg"],
+            "args": ["--hand", "barrett_cfg"],
         },
         {
             "name": "visualize result",
@@ -37,7 +37,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/visualize_result.py",
             "console": "integratedTerminal",
-            "args": ["--hand", "allegro_cfg"],
+            "args": ["--hand", "barrett_cfg", "--object_code", "mujoco-Ecoforms_Planter_Bowl_Cole_Hardware"],
         },
         {
             "name": "visualize franka hand",
@@ -53,10 +53,13 @@
             "request": "launch",
             "program": "${workspaceFolder}/scripts/validate_grasps.py",
             "console": "integratedTerminal",
-            "args": [],
+            "args": ["--gpu", "0", 
+                    "--hand", "barrett_cfg",
+                    "--object_code", "mujoco-Ecoforms_Planter_Bowl_Cole_Hardware"],
             "env": {
                 "CUDA_VISIBLE_DEVICES" : "0"
-            }
+            },
+            "justMyCode": false
         }
     ]
 }

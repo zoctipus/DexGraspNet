@@ -29,10 +29,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--hand', type=str, default='allegro_cfg')
     parser.add_argument('--object_code', type=str, default='core-mug-8570d9a8d24cb0acbebd3c0c0c70fb03')
-    parser.add_argument('--num', type=int, default=3)
+    parser.add_argument('--num', type=int, default=5)
     args = parser.parse_args()
     hand_name = args.hand[:args.hand.rfind('_')]
-    result_path = os.path.join("../data", hand_name + "_graspdata") 
+    result_path = os.path.join("../output", hand_name + "_graspdata") 
     device = 'cpu'
     
     if args.hand not in ["allegro_cfg", "barrett_cfg", "franka_cfg"]:
@@ -53,32 +53,6 @@ if __name__ == '__main__':
     )
     
     joint_names = hand["joint_names"]
-
-    # hand models
-    '''Robotiq Hand'''
-    # hand_model = HandModel(
-    #     mjcf_path='mjcf/robotiq_hand/2f85_primitified.xml',
-    #     mesh_path='mjcf/robotiq_hand/meshes',
-    #     contact_points_path='mjcf/robotiq_hand/contact_points.json',
-    #     penetration_points_path='mjcf/robotiq_hand/penetration_points.json',
-    #     n_surface_points=2000,
-    #     device=device
-    # )
-    '''Shadow Hand'''
-    # hand_model = HandModel(
-    #     mjcf_path='mjcf/shadow_hand/shadow_hand_wrist_free.xml',
-    #     mesh_path='mjcf/shadow_hand/meshes',
-    #     contact_points_path='mjcf/shadow_hand/contact_points.json',
-    #     penetration_points_path='mjcf/shadow_hand/penetration_points.json',
-    #     device=device
-    # )
-    # joint_names = [
-    #     'robot0:FFJ3', 'robot0:FFJ2', 'robot0:FFJ1', 'robot0:FFJ0',
-    #     'robot0:MFJ3', 'robot0:MFJ2', 'robot0:MFJ1', 'robot0:MFJ0',
-    #     'robot0:RFJ3', 'robot0:RFJ2', 'robot0:RFJ1', 'robot0:RFJ0',
-    #     'robot0:LFJ4', 'robot0:LFJ3', 'robot0:LFJ2', 'robot0:LFJ1', 'robot0:LFJ0',
-    #     'robot0:THJ4', 'robot0:THJ3', 'robot0:THJ2', 'robot0:THJ1', 'robot0:THJ0'
-    # ]
 
 
     # load results

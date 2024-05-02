@@ -14,18 +14,20 @@ import argparse
 import torch
 import numpy as np
 import transforms3d
-from utils.hand_model import HandModel
+from utils.hand_model_urdf import HandModel
 from utils.object_model import ObjectModel
+from hands.hand_configs import *
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--hand', type=str, default='allegro_cfg')
     parser.add_argument('--gpu', default=3, type=int)
-    parser.add_argument('--val_batch', default=500, type=int)
+    parser.add_argument('--val_batch', default=1, type=int)
     parser.add_argument('--mesh_path', default="../data/meshdata", type=str)
-    parser.add_argument('--grasp_path', default="../data/graspdata", type=str)
+    # parser.add_argument('--grasp_path', default="../data/graspdata", type=str)
     parser.add_argument('--result_path', default="../data/dataset", type=str)
     parser.add_argument('--object_code',
-                        default="sem-Xbox360-d0dff348985d4f8e65ca1b579a4b8d2",
+                        default="sem-Bottle-437678d4bc6be981c8724d5673a063a6",
                         type=str)
     # if index is received, then the debug mode is on
     parser.add_argument('--index', type=int)
@@ -36,16 +38,21 @@ if __name__ == '__main__':
     parser.add_argument('--penetration_threshold', default=0.001, type=float)
 
     args = parser.parse_args()
-
+    
+    if args.hand not in ["allegro_cfg", "barrett_cfg", "franka_cfg"]:
+        raise ValueError("the argument for hand is not found in hands assets")
+    if args.hand == "allegro_cfg":
+        hand = allegro_cfg
+    elif args.hand == "barrett_cfg":
+        hand = barrett_cfg
+    elif args.hand == "franka_cfg":
+        hand = franka_cfg
+    
+    hand_name = args.hand[:args.hand.rfind('_')]
+    grasp_path = os.path.join("../output", hand_name + "_graspdata") 
     translation_names = ['WRJTx', 'WRJTy', 'WRJTz']
     rot_names = ['WRJRx', 'WRJRy', 'WRJRz']
-    joint_names = [
-        'robot0:FFJ3', 'robot0:FFJ2', 'robot0:FFJ1', 'robot0:FFJ0',
-        'robot0:MFJ3', 'robot0:MFJ2', 'robot0:MFJ1', 'robot0:MFJ0',
-        'robot0:RFJ3', 'robot0:RFJ2', 'robot0:RFJ1', 'robot0:RFJ0',
-        'robot0:LFJ4', 'robot0:LFJ3', 'robot0:LFJ2', 'robot0:LFJ1', 'robot0:LFJ0',
-        'robot0:THJ4', 'robot0:THJ3', 'robot0:THJ2', 'robot0:THJ1', 'robot0:THJ0'
-    ]
+    joint_names = hand["joint_names"]
 
     os.environ.pop("CUDA_VISIBLE_DEVICES")
     os.makedirs(args.result_path, exist_ok=True)
@@ -54,7 +61,7 @@ if __name__ == '__main__':
         device = torch.device(
             f'cuda:{args.gpu}' if torch.cuda.is_available() else 'cpu')
         data_dict = np.load(os.path.join(
-            args.grasp_path, args.object_code + '.npy'), allow_pickle=True)
+            grasp_path, args.object_code + '.npy'), allow_pickle=True)
         batch_size = data_dict.shape[0]
         hand_state = []
         scale_tensor = []
@@ -71,13 +78,20 @@ if __name__ == '__main__':
         hand_state = torch.stack(hand_state).to(device).requires_grad_()
         scale_tensor = torch.tensor(scale_tensor).reshape(1, -1).to(device)
         # print(scale_tensor.dtype)
+        # hand_model = HandModel(
+        #     mjcf_path='mjcf/shadow_hand_wrist_free.xml',
+        #     mesh_path='mjcf/meshes',
+        #     contact_points_path='mjcf/contact_points.json',
+        #     penetration_points_path='mjcf/penetration_points.json',
+        #     n_surface_points=2000,
+        #     device=device
+        # )
         hand_model = HandModel(
-            mjcf_path='mjcf/shadow_hand_wrist_free.xml',
-            mesh_path='mjcf/meshes',
-            contact_points_path='mjcf/contact_points.json',
-            penetration_points_path='mjcf/penetration_points.json',
-            n_surface_points=2000,
-            device=device
+            urdf_path=hand["urdf_path"],
+            contact_points_path=hand["contact_points_path"],
+            default_pos=hand["default_pos"],
+            n_surface_points=1000, 
+            device=device,
         )
         hand_model.set_parameters(hand_state)
         # object model
@@ -86,6 +100,7 @@ if __name__ == '__main__':
             batch_size_each=batch_size,
             num_samples=0,
             device=device
+            
         )
         object_model.initialize(args.object_code)
         object_model.object_scale_tensor = scale_tensor
@@ -125,12 +140,12 @@ if __name__ == '__main__':
             hand_state[:, 9:] += hand_state.grad[:, 9:] * args.grad_move
             hand_state.grad.zero_()
 
-    sim = IsaacValidator(gpu=args.gpu)
+    sim = IsaacValidator(joint_names=hand["joint_names"],gpu=args.gpu)
     if (args.index is not None):
-        sim = IsaacValidator(gpu=args.gpu, mode="gui")
+        sim = IsaacValidator(joint_names=hand["joint_names"],gpu=args.gpu, mode="gui")
 
     data_dict = np.load(os.path.join(
-        args.grasp_path, args.object_code + '.npy'), allow_pickle=True)
+        grasp_path, args.object_code + '.npy'), allow_pickle=True)
     batch_size = data_dict.shape[0]
     scale_array = []
     hand_poses = []
@@ -166,11 +181,15 @@ if __name__ == '__main__':
         result = []
         for batch in range(batch_size // args.val_batch):
             offset_ = min(offset + args.val_batch, batch_size)
-            sim.set_asset("open_ai_assets", "hand/shadow_hand.xml",
+            sim.set_asset(os.path.dirname(hand["src_urdf_path"]), os.path.basename(hand["src_urdf_path"]),
                            os.path.join(args.mesh_path, args.object_code, "coacd"), "coacd.urdf")
+            target_pos = torch.tensor(hand["close_pos"], device=device, dtype=torch.float32)
+            non_closing_index = target_pos==-1
             for index in range(offset, offset_):
+                target_pos_i = target_pos.clone()
+                target_pos_i[non_closing_index] = hand_poses[index][non_closing_index]
                 sim.add_env(rotations[index], translations[index], hand_poses[index],
-                            scale_array[index])
+                            scale_array[index], target_pos_i)
             result = [*result, *sim.run_sim()]
             sim.reset_simulator()
             offset = offset_

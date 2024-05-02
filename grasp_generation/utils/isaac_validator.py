@@ -15,6 +15,7 @@ gym = gymapi.acquire_gym()
 class IsaacValidator():
 
     def __init__(self,
+                 joint_names,
                  mode='direct',
                  hand_friction=3.,
                  obj_friction=3.,
@@ -36,30 +37,7 @@ class IsaacValidator():
         self.obj_handles = []
         self.hand_rigid_body_sets = []
         self.obj_rigid_body_sets = []
-        self.joint_names = joint_names = [
-            'robot0:FFJ3',
-            'robot0:FFJ2',
-            'robot0:FFJ1',
-            'robot0:FFJ0',
-            'robot0:MFJ3',
-            'robot0:MFJ2',
-            'robot0:MFJ1',
-            'robot0:MFJ0',
-            'robot0:RFJ3',
-            'robot0:RFJ2',
-            'robot0:RFJ1',
-            'robot0:RFJ0',
-            'robot0:LFJ4',
-            'robot0:LFJ3',
-            'robot0:LFJ2',
-            'robot0:LFJ1',
-            'robot0:LFJ0',
-            'robot0:THJ4',
-            'robot0:THJ3',
-            'robot0:THJ2',
-            'robot0:THJ1',
-            'robot0:THJ0'
-        ]
+        self.joint_names = joint_names
         self.hand_asset = None
         self.obj_asset = None
 
@@ -77,6 +55,7 @@ class IsaacValidator():
         self.sim_params.physx.num_velocity_iterations = 0
         self.sim_params.physx.contact_offset = 0.01
         self.sim_params.physx.rest_offset = 0.0
+        self.sim_params.physx.max_gpu_contact_pairs = 2 ** 22
 
         self.sim_params.use_gpu_pipeline = False
         self.sim = gym.create_sim(self.gpu, self.gpu, gymapi.SIM_PHYSX,
@@ -144,13 +123,15 @@ class IsaacValidator():
             pose.r = gymapi.Quat(*hand_rotation[1:], hand_rotation[0])
             pose.p = gymapi.Vec3(*hand_translation)
             pose = test_rot * pose
+            # hand_actor_handle = gym.create_actor(
+            #     env, self.hand_asset, pose, "shand", 0, -1)
             hand_actor_handle = gym.create_actor(
                 env, self.hand_asset, pose, "shand", 0, -1)
             self.hand_handles.append(hand_actor_handle)
             hand_props = gym.get_actor_dof_properties(env, hand_actor_handle)
             hand_props["driveMode"].fill(gymapi.DOF_MODE_POS)
             hand_props["stiffness"].fill(1000)
-            hand_props["damping"].fill(0.0)
+            hand_props["damping"].fill(100)
             gym.set_actor_dof_properties(env, hand_actor_handle, hand_props)
             dof_states = gym.get_actor_dof_states(env, hand_actor_handle,
                                                   gymapi.STATE_ALL)
@@ -280,6 +261,7 @@ class IsaacValidator():
     def run_sim(self):
         for _ in range(self.sim_step):
             gym.simulate(self.sim)
+            
             if self.has_viewer:
                 sleep(self.debug_interval)
                 if gym.query_viewer_has_closed(self.viewer):

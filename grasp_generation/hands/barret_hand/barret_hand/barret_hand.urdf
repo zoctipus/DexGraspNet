@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="barret_hand">
+  <joint name="bh282_j00" type="revolute">
+    <origin xyz="-0.025 0. 0.0754" rpy="0. 0. -1.5707964"/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_finger0_0"/>
+    <axis xyz="0. 0. -1."/>
+    <limit lower="0." upper="3.1415927" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j01" type="revolute">
+    <origin xyz="0.05 0.001 -0.028" rpy="1.570796 0. 0. "/>
+    <parent link="bh282_finger0_0"/>
+    <child link="bh282_finger0_1"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="0." upper="2.4434607" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j02" type="revolute">
+    <origin xyz="0.0699357 0.003 0.0002 " rpy="0. 0. 0.6981317"/>
+    <parent link="bh282_finger0_1"/>
+    <child link="bh282_finger0_2"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="0." upper="0.837758" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j10" type="revolute">
+    <origin xyz="0.025 0. 0.0754" rpy="-0. -0.0058448 -1.5708 "/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_finger1_0"/>
+    <axis xyz="0.005845 0. 0.999983"/>
+    <limit lower="0." upper="3.1415927" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j11" type="revolute">
+    <origin xyz="0.05 0.001 -0.028" rpy="1.570796 0. 0. "/>
+    <parent link="bh282_finger1_0"/>
+    <child link="bh282_finger1_1"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="0." upper="2.4434607" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j12" type="revolute">
+    <origin xyz="0.0699357 0.003 0.0002 " rpy="0. 0. 0.70008"/>
+    <parent link="bh282_finger1_1"/>
+    <child link="bh282_finger1_2"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="0." upper="0.837758" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j21" type="revolute">
+    <origin xyz="-0.0018 0.053 0.048 " rpy="1.570796 0.0000001 1.570796 "/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_finger2_1"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="0." upper="2.4434607" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_j22" type="revolute">
+    <origin xyz="0.0699357 0.003 0.0002 " rpy="0. 0. 0.6981317"/>
+    <parent link="bh282_finger2_1"/>
+    <child link="bh282_finger2_2"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="0." upper="0.837758" effort="0." velocity="0."/>
+  </joint>
+  <joint name="bh282_perception_palm_mount" type="fixed">
+    <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="bh282_hand_base"/>
+    <child link="bh282_perception_palm"/>
+    <limit lower="0." upper="0." effort="0." velocity="0."/>
+  </joint>
+  <joint name="root_joint" type="fixed">
+    <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="bh282"/>
+    <child link="bh282_hand_base"/>
+    <limit lower="0." upper="0." effort="0." velocity="0."/>
+  </joint>
+  <link name="bh282"/>
+  <link name="bh282_finger0_0">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.14109"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. -0.029" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_0_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. -0.029" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_0_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. -0.029" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_0_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger0_1">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.062139"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_1_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_1_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_1_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger0_2">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.04166"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_2_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_2_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger0_2_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger1_0">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.14109"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. -0.029" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_0_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. -0.029" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_0_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. -0.029" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_0_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger1_1">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.062139"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_1_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_1_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_1_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger1_2">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.04166"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_2_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_2_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger1_2_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger2_1">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.062139"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger2_1_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger2_1_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger2_1_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_finger2_2">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.04166"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger2_2_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger2_2_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_finger2_2_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_hand_base">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.60858"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.112 -0.056 -0.023" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_hand_base_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="-0.112 -0.056 -0.023" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_hand_base_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.112 -0.056 -0.023" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_hand_base_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="bh282_perception_palm">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.60858"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.112 -0.056 -0.023" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_perception_palm_visuals.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="-0.112 -0.056 -0.023" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_perception_palm_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.112 -0.056 -0.023" rpy="0. 0. 0."/>
+      <geometry>
+        <mesh filename="meshes/bh282_perception_palm_collisions.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

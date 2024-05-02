@@ -164,7 +164,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # experiment settings
     parser.add_argument('--hand', type=str, default='allegro_cfg')
-    parser.add_argument('--result_path', default="../data/graspdata_franka", type=str)
+    parser.add_argument('--result_path', default="../output/graspdata_franka", type=str)
     parser.add_argument('--data_root_path', default="../data/meshdata", type=str)
     parser.add_argument('--object_code_list', nargs='*', type=str)
     parser.add_argument('--all', action='store_true')
@@ -209,7 +209,7 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     hand_name = args.hand[:args.hand.rfind('_')]
-    result_path = os.path.join("../data", hand_name + "_graspdata") 
+    result_path = os.path.join("../output", hand_name + "_graspdata") 
     # if not os.path.exists(args.result_path):
     #     os.makedirs(args.result_path)
     if not os.path.exists(result_path):
