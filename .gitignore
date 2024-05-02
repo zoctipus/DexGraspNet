@@ -3,6 +3,11 @@ meshdata
 experiments
 graspdata
 dataset
+data
+
+**/data/
+**/data/dataset/
+/data/
 
 # Caches
 __pycache__
